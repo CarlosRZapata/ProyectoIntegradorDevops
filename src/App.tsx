@@ -36,7 +36,7 @@ const App: React.FC = () => {
       key: 'precio',
     },
     {
-      title: 'ID_Categoria',
+      title: 'ID_Categorias',
       dataIndex: 'fk_categoria',
       key: 'fk_categoria',
     },
