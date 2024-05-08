@@ -33,15 +33,27 @@ const TablaUsuarios: React.FC = () => {
       },
       
       {
-        title: 'Fecha_Creacion',
-        dataIndex: 'fecha_creacion',
-        key: 'fecha_creacion',
+        title: 'Creado por',
+        dataIndex: 'creado_por',
+        key: 'creado_por',
       },
       
       {
-        title: 'Fecha_Actualizacion',
-        dataIndex: 'fecha_actualizacion',
-        key: 'fecha_actualizacion',
+        title: 'Actualizado por',
+        dataIndex: 'actualizado_por',
+        key: 'actualizado_por',
+      },
+
+      {
+        title: 'Fecha_Eliminacion',
+        dataIndex: 'fecha_elimincacion',
+        key: 'fecha_elimincacion',
+      },
+      
+      {
+        title: 'Eliminado por',
+        dataIndex: 'eliminado_por',
+        key: 'eliminado_por',
       },
   ];
 
