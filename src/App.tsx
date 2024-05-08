@@ -1,73 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { getProducts } from "./services/product";
-import { Table } from "antd";
-import { Product } from "./models/product";
+import React from "react";
+import { Layout } from "antd";
+import Sider from "antd/es/layout/Sider";
+import { Content, Footer, Header } from "antd/es/layout/layout";
+import { Outlet } from "react-router-dom";
+import MenuSidebar from "./tabla/MenuSidebar";
 
 const App: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const products = await getProducts();
-        setProducts(products);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  const columns = [
-    {
-      title: 'ID_Product',
-      dataIndex: 'id_productos',
-      key: 'id_productos',
-    },
-    {
-      title: 'Nombre',
-      dataIndex: 'nombre',
-      key: 'nombre',
-    },
-    {
-      title: 'Precio',
-      dataIndex: 'precio',
-      key: 'precio',
-    },
-    {
-      title: 'ID_Categorias',
-      dataIndex: 'fk_categoria',
-      key: 'fk_categoria',
-    },
-    {
-      title: 'FechaCreacion',
-      dataIndex: 'fecha_creacion',
-      key: 'fecha_creacion',
-    },
-    {
-      title: 'FechaActualizacion',
-      dataIndex: 'fecha_actualizacion',
-      key: 'fecha_actualizacion',
-    },
-    {
-      title: 'FechaEliminado',
-      dataIndex: 'fecha_eliminacion',
-      key: 'fecha_eliminacion',
-    },
-
-
-  ];
-
-  return (
-    <>
-      <Table
-        columns={columns}
-        dataSource={products}
-      />
-        
-    </>
-  );
-}
+	return (
+		<Layout>
+			<Sider width={"25%"}>
+				<MenuSidebar />
+			</Sider>
+			<Layout className="site-layout">
+				<Header className="site-layout-background" style={{ padding: 0 }} />
+				<Content
+					className="site-layout-background"
+					style={{ margin: "0 16px", padding: 24, minHeight: 360 }}
+				>
+					<Outlet />
+				</Content>
+				<Footer style={{ textAlign: "center" }}>Footer</Footer>
+			</Layout>
+		</Layout>
+	);
+};
 
 export default App;
