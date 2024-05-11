@@ -1,9 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { getSesiones } from "../services/sessions";
-import { Table } from "antd";
+import { Button, Drawer, Form, DatePicker, Space, Table, InputNumber } from 'antd';
 import { Session } from "../models/sessions";
+import DrawerFooter from "./DrawerFooter";
+import type { DatePickerProps } from 'antd';
 
 const TablaSesiones: React.FC = () => {
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    console.log("Date selected:", date, dateString);
+  };
+
+  const onNumberChange = (value: number | null) => {
+    console.log("Number input changed:", value);
+  };
+
   const [session, setSessions] = useState<Session[]>([]);
 
   useEffect(() => {
@@ -71,10 +91,22 @@ const TablaSesiones: React.FC = () => {
 
   return (
     <>
-      <Table
-        columns={columns}
-        dataSource={session}
-      />
+      <Button type="primary" onClick={showDrawer}>
+        Añadir
+      </Button>
+      <Table columns={columns} dataSource={session}/>
+      <Drawer title="Agregar fecha_sesion" onClose={onClose} open={open} footer={<DrawerFooter/>}>
+        <Form>
+        <Form.Item label="Fecha de sesion"  name="FechaSesion">
+            <Space direction="vertical">
+              <DatePicker onChange={onDateChange} />
+            </Space>
+        </Form.Item>
+        <Form.Item label="ID Producto" name="ID_Producto">
+            <InputNumber min={0} max={99999} defaultValue={0} onChange={onNumberChange} />
+          </Form.Item>
+        </Form>
+      </Drawer>
 
     </>
   );

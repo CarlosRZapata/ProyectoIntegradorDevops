@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { getGenero } from "../services/gender";
-import { Table } from "antd";
 import { Gender } from "../models/gender";
+import { Button, Drawer, Form, Input, Table } from 'antd';
+import DrawerFooter from "./DrawerFooter";
 
 const TablaGenero: React.FC = () => {
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
   const [gender, setGender] = useState<Gender[]>([]);
 
   useEffect(() => {
@@ -53,10 +64,17 @@ const TablaGenero: React.FC = () => {
 
   return (
     <>
-      <Table
-        columns={columns}
-        dataSource={gender}
-      />
+      <Button type="primary" onClick={showDrawer}>
+        Añadir
+      </Button>
+      <Table columns={columns} dataSource={gender}/>
+      <Drawer title="Agregar genero" onClose={onClose} open={open} footer={<DrawerFooter/>}>
+        <Form>
+          <Form.Item label="Genero"  name="Genero">
+              <Input/>
+          </Form.Item>
+        </Form>
+      </Drawer>
 
     </>
   );

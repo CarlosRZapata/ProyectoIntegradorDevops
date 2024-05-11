@@ -1,6 +1,6 @@
 import { Space, Typography } from 'antd'
 import React from 'react'
-import UsersTable from '../../../tabla/tablaDireccion'
+import UsersTable from '../../../tabla/tablaClientes'
 
 const ClientesCollection:React.FC = () => {
   return (

@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { getUsuarios } from "../services/user";
-import { Table } from "antd";
+import { Form, Input, Table, Button, Drawer } from "antd";
 import { User } from "../models/user";
+import DrawerFooter from "./DrawerFooter";
 
 const TablaUsuarios: React.FC = () => {
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
   const [users, setUser] = useState<User[]>([]);
 
   useEffect(() => {
@@ -43,26 +54,24 @@ const TablaUsuarios: React.FC = () => {
         dataIndex: 'actualizado_por',
         key: 'actualizado_por',
       },
-
-      {
-        title: 'Fecha_Eliminacion',
-        dataIndex: 'fecha_elimincacion',
-        key: 'fecha_elimincacion',
-      },
-      
-      {
-        title: 'Eliminado por',
-        dataIndex: 'eliminado_por',
-        key: 'eliminado_por',
-      },
   ];
 
   return (
     <>
-      <Table
-        columns={columns}
-        dataSource={users}
-      />
+      <Button type="primary" onClick={showDrawer}>
+        Añadir
+      </Button>
+      <Table columns={columns} dataSource={users}/>
+      <Drawer title="Agregar usuario" onClose={onClose} open={open} footer={<DrawerFooter/>}>
+        <Form>
+          <Form.Item label="Nombre"  name="Nombre">
+              <Input/>
+          </Form.Item>
+          <Form.Item label="Apellido"  name="Apellido">
+              <Input/>
+          </Form.Item>
+        </Form>
+      </Drawer>
 
     </>
   );

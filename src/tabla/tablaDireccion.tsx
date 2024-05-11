@@ -1,9 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { getDireccion } from "../services/direction";
-import { Table } from "antd";
+import { Button, Drawer, Form, Input, Table, InputNumber } from "antd";
 import { Direction } from "../models/direction";
+import DrawerFooter from "./DrawerFooter";
+import type { InputNumberProps } from 'antd';
 
 const TablaDireccion: React.FC = () => {
+  const onChange: InputNumberProps['onChange'] = (value) => {
+    console.log('changed', value);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
   const [direction, setDirection] = useState<Direction[]>([]);
 
   useEffect(() => {
@@ -90,11 +106,38 @@ const TablaDireccion: React.FC = () => {
 
   return (
     <>
+      <Button type="primary" onClick={showDrawer}>
+        Añadir
+      </Button>
       <Table
         columns={columns}
         dataSource={direction}
       />
-
+      <Drawer title="Agregar direccion" onClose={onClose} open={open} footer={<DrawerFooter/>}>
+        <Form>
+          <Form.Item label="Nombre"  name="Nombre">
+              <Input/>
+          </Form.Item>
+          <Form.Item label="Código Postal" name="CodigoPostal">
+            <InputNumber min={0} max={99999} defaultValue={0} onChange={onChange} />
+          </Form.Item>
+          <Form.Item label="Calle"  name="Calle">
+              <Input/>
+          </Form.Item>
+          <Form.Item label="Colonia"  name="Colonia">
+              <Input/>
+          </Form.Item>
+          <Form.Item label="Numero exterior" name="Num_ext">
+            <InputNumber min={0} max={999} defaultValue={0} onChange={onChange} />
+          </Form.Item>
+          <Form.Item label="Numero interior" name="Num_int">
+            <InputNumber min={0} max={999} defaultValue={0} onChange={onChange} />
+          </Form.Item>
+          <Form.Item label="Ciudad"  name="Ciudad">
+              <Input/>
+          </Form.Item>
+        </Form>
+      </Drawer>
     </>
   );
 }
