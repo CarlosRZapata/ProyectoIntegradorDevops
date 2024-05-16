@@ -6,7 +6,12 @@ export const getDireccion = async (): Promise<Direction[]> => {
     if (error) {
         console.error("Error fetching products:", error);
       } else {
-        console.log("direccion:", data); // Agrega esta línea para imprimir los datos
+        console.log("direccion:", data); 
       }
       return data || []; 
+}
+
+export const createDireccion = async (direccion: Direction): Promise<void> => {
+  const { error} = await supabase.from("direccion").insert(direccion);
+  if (error) throw error;
 }

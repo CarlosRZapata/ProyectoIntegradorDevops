@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../services/product";
-import { Button, Drawer, Form, Input, Table, InputNumber } from "antd";
+import { getProducts,createProducts } from "../services/product";
+import { Table, Drawer, Button, Form, Input, InputNumberProps, InputNumber } from "antd";
 import { Product } from "../models/product";
 import DrawerFooter from "./DrawerFooter";
-import type { InputNumberProps } from 'antd';
+import supabase from "../utils/supabase";
 
 const TablaProductos: React.FC = () => {
-  const onChange: InputNumberProps['onChange'] = (value) => {
-    console.log('changed', value);
-  };
+  const [products, setProducts] = useState<Product[]>([]);
+  const [nombre, setNombre] = useState<string>('');
+  const [precio, setPrecio] = useState<number>(0);
+  const [fk_categoria, setIDCategoria] = useState<number>(0);
 
   const [open, setOpen] = useState(false);
 
@@ -19,8 +20,6 @@ const TablaProductos: React.FC = () => {
   const onClose = () => {
     setOpen(false);
   };
-  
-  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -35,20 +34,64 @@ const TablaProductos: React.FC = () => {
     fetchProducts();
   }, []);
 
+  const handleSubmit = async () => {
+    try {
+      const currentDateTime = new Date();
+      const maxIdResponse = await supabase
+        .from("productos")
+        .select("id_producto")
+        .order("id_producto", { ascending: false })
+        .limit(1);
+
+      const maxId = maxIdResponse.data?.[0]?.id_producto || 0;
+      const newId = maxId + 1;
+
+      const productosInput: Product = {
+        id_producto: newId,
+        nombre,
+        precio,
+        fk_categoria,
+        fecha_creacion: currentDateTime, 
+      };
+
+      await createProducts(productosInput);
+
+      const updatedProductos = await getProducts();
+      setProducts(updatedProductos);
+      onClose();
+    } catch (error) {
+      console.error("Error creating productos:", error);
+    }
+  };
+
+  const onChangeP: InputNumberProps['onChange'] = (value) => {
+    if (value !== null && typeof value === 'number') {
+      setPrecio(value);
+    } else {
+      setPrecio(0);
+    }
+  };
+
+  const onChangeC: InputNumberProps['onChange'] = (value) => {
+    if (value !== null && typeof value === 'number') {
+      setIDCategoria(value);
+    } else {
+      setIDCategoria(0);
+    }
+  };
+
   const columns = [
     {
       title: 'ID_Producto',
       dataIndex: 'id_productos',
-      key: 'id_Producto',
+      key: 'id_productos',
 
     },
-
     {
       title: 'Nombre',
       dataIndex: 'nombre',
       key: 'nombre',
     },
-
     {
       title: 'Precio',
       dataIndex: 'precio',
@@ -66,13 +109,11 @@ const TablaProductos: React.FC = () => {
       dataIndex: 'fecha_creacion',
       key: 'fecha_creacion',
     },
-
     {
       title: 'FechaActu',
       dataIndex: 'fecha_actualizacion',
       key: 'fecha_actualizacion',
     },
-
     {
       title: 'FechaEliminado',
       dataIndex: 'fecha_eliminacion',
@@ -82,26 +123,38 @@ const TablaProductos: React.FC = () => {
 
   return (
     <>
-      <Button type="primary" onClick={showDrawer}>
-        Añadir
+     <Button type="primary" onClick={showDrawer}>
+        Agregar producto
       </Button>
-      <Table
-        columns={columns}
-        dataSource={products}
-      />
-      <Drawer title="Agregar producto" onClose={onClose} open={open} footer={<DrawerFooter/>}>
-        <Form>
-          <Form.Item label="Nombre"  name="Nombre">
-              <Input/>
+      <Table columns={columns} dataSource={products}/>
+      <Drawer title="Agregar Productos" onClose={onClose} open={open} footer={<DrawerFooter createRecord={handleSubmit}/>}>
+      <Form onFinish={handleSubmit}>
+          <Form.Item
+            label="Nombre"
+            name="nombre"
+            rules={[{ required: true, message: "Agrega el nombre del producto" }]}
+          >
+          <Input value={nombre} onChange={(e) => setNombre(e.target.value)} />          
           </Form.Item>
-          <Form.Item label="Precio" name="Precio">
-            <InputNumber min={0} max={99999} defaultValue={0} onChange={onChange} />
-          </Form.Item>
-          <Form.Item label="ID Categoria" name="ID_Categoria">
-            <InputNumber min={0} max={99} defaultValue={0} onChange={onChange} />
+
+          <Form.Item
+            label="Precio"
+            name="precio"
+            rules={[{ required: true, message: "Agrega el precio" }]}
+          >
+          <InputNumber defaultValue={precio} onChange={onChangeP} />          </Form.Item>
+
+          <Form.Item
+            label="ID_Categoria"
+            name="idcategoria"
+            rules={[{ required: true, message: "Agrega el ID de la categoria del producto" }]}
+          >
+          <InputNumber defaultValue={fk_categoria} onChange={onChangeC} />          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           </Form.Item>
         </Form>
       </Drawer>
+
     </>
   );
 }

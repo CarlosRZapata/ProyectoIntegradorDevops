@@ -1,15 +1,16 @@
 export interface Direction {
-    ID_Direccion: number;
-    Codigo_Postal: number;
-    Calle: string;
-    Colonia: string;
-    Num_Exterior: string;
-    Num_Interior: string;
-    Ciudad: string;
-    FechaCreacion: Date;
-    fk_CreadoPor?: number | null;
-    FechaActu?: Date| null;
-    fk_ActualizadoPor?: number| null;
-    FechaEliminado?: Date | null;
-    fk_EliminadoPor?: number | null;
+  id_direccion: number;
+  nombre: string;
+  codigo_postal: number;
+  calle: string;
+  Colonia: string;
+  numero_exterior: string;
+  numero_interior: string;
+  Ciudad: string;
+  fecha_creacion: Date | null;
+  fk_CreadoPor?: number | null;
+  FechaActu?: Date| null;
+  fk_ActualizadoPor?: number| null;
+  FechaEliminado?: Date | null;
+  fk_EliminadoPor?: number | null;
   }

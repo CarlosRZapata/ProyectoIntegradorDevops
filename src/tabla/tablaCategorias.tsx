@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { getCategory } from "../services/category";
+import { getCategory, createCategory } from "../services/category";
 import { Button, Drawer, Form, Input, Table } from 'antd';
 import { Category } from "../models/category";
 import DrawerFooter from "./DrawerFooter";
 
 
 const TablaCategorias: React.FC = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [category, setCategory] = useState<Category[]>([]);
+  const [nombre, setNombre] = useState<string>(''); 
 
   const showDrawer = () => {
     setOpen(true);
@@ -15,21 +17,36 @@ const TablaCategorias: React.FC = () => {
   const onClose = () => {
     setOpen(false);
   };
-
-  const [category, setCategory] = useState<Category[]>([]);
-
   useEffect(() => {
     const fetchCategory = async () => {
       try {
         const categories = await getCategory();
         setCategory(categories);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching category:", error);
       }
     };
 
     fetchCategory();
   }, []);
+
+  const handleSubmit = async () => {
+    try {
+      const nextId = category.reduce((maxId, category) => Math.max(maxId, category.id_categoria), 5) + 1;
+      const nuevaCategoria: Category = {
+        id_categoria: nextId,
+        nombre,
+        fecha_creacion: new Date(),
+        fecha_actualizacion: new Date(),
+      };
+      await createCategory(nuevaCategoria);
+      const updatedCategory = await getCategory();
+      setCategory(updatedCategory);
+      onClose();  
+    } catch (error) {
+      console.error("Error creating :", error);
+    }
+  };
 
   const columns = [
     {
@@ -83,14 +100,26 @@ const TablaCategorias: React.FC = () => {
   return (
     <>
       <Button type="primary" onClick={showDrawer}>
-        Añadir
+        Añadir Categoria
       </Button>
-      <Table columns={columns} dataSource={category}/>
-      <Drawer title="Agregar categoria" onClose={onClose} open={open} footer={<DrawerFooter/>}>
-        <Form>
-          <Form.Item label="Categoria"  name="Categoria">
-              <Input/>
+      <Table columns={columns} dataSource={category} />
+      <Drawer
+        title="Agregar Categoria"
+        onClose={onClose}
+        open={open}
+        footer={<DrawerFooter />}
+      >
+        <Form onFinish={handleSubmit}>
+          <Form.Item
+            label="Categoria"
+            name="Categoria"
+            rules={[{ required: true, message: 'Por favor ingrese el nombre de la categoria' }]}
+          >
+            <Input value={nombre} onChange={(e) => setNombre(e.target.value)} />
           </Form.Item>
+          <Button type="primary" htmlType="submit">
+            Crear Categoria
+          </Button>
         </Form>
       </Drawer>
     </>

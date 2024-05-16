@@ -11,3 +11,8 @@ export const getCliente = async (): Promise<Client[]> => {
       }
       return data || []; 
 }
+
+export const createClientes = async (cliente: Client): Promise<void> => {
+  const { error} = await supabase.from("clientes").insert(cliente);
+  if (error) throw error;
+}

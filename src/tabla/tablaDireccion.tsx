@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { getDireccion } from "../services/direction";
+import { getDireccion, createDireccion} from "../services/direction";
 import { Button, Drawer, Form, Input, Table, InputNumber } from "antd";
 import { Direction } from "../models/direction";
 import DrawerFooter from "./DrawerFooter";
 import type { InputNumberProps } from 'antd';
+import supabase from "../utils/supabase";
+
 
 const TablaDireccion: React.FC = () => {
+  const [direction, setDirection] = useState<Direction[]>([]);
+  const [open, setOpen] = useState(false);
+  const [codigo_postal, setCP] = useState<string>('');
+  const [calle, setCalle] = useState<string>('');
+  const [numero_exterior, setNumEXT] = useState<string>('');
+  const [numero_interior, setNumINT] = useState<string>('');
+  const [ciudad, setCiudad] = useState<string>('');
   const onChange: InputNumberProps['onChange'] = (value) => {
     console.log('changed', value);
   };
-
-  const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
     setOpen(true);
@@ -20,20 +27,60 @@ const TablaDireccion: React.FC = () => {
     setOpen(false);
   };
 
-  const [direction, setDirection] = useState<Direction[]>([]);
-
   useEffect(() => {
     const fetchDirection = async () => {
       try {
         const direction = await getDireccion();
         setDirection(direction);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching directions:", error);
       }
     };
 
     fetchDirection();
   }, []);
+
+  const onChangeCodigoPostal = (value: string | null | undefined) => {
+    if (value !== null && value !== undefined) {
+      setCP(value);
+    } else {
+      setCP('');
+    }
+  };
+
+  const handleSubmit = async () => {
+    const randomID =  Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+
+    try {
+      const currentDateTime = new Date();
+      const maxIdResponse = await supabase
+        .from("direccion")
+        .select("id_direccion")
+        .order("id_direccion", { ascending: false })
+        .limit(1);
+
+      const maxId = maxIdResponse.data?.[0]?.id_direccion || 0;
+      const newId = maxId + 1;
+
+      const direccionInput: Direction = {
+        id_direccion: newId,
+        codigo_postal,
+        calle,
+        numero_exterior,
+        numero_interior,
+        ciudad,
+        fechacreacion: currentDateTime, 
+        fk_creadopor: randomID
+      };
+
+      await createDireccion(direccionInput);
+      const updatedDireccion = await getDireccion();
+      setDirection(updatedDireccion);
+      onClose();
+    } catch (error) {
+      console.error("Error creating direccion:", error);
+    }
+  };
 
   const columns = [
     {

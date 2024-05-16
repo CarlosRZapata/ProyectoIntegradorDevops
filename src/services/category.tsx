@@ -10,3 +10,8 @@ export const getCategory = async (): Promise<Category[]> => {
       }
       return data || []; 
 }
+
+export const createCategory = async (categoria: Category): Promise<void> => {
+  const { error} = await supabase.from("categoria").insert(categoria);
+  if (error) throw error;
+}
