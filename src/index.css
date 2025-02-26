@@ -54,6 +54,31 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.mi-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0; /* Elimina espacios entre celdas */
+  border-radius: 10px 10px 0 0; /* Esquinas superiores redondeadas */
+  overflow: hidden; /* Asegura que el borde redondeado se mantenga */
+}
+
+.mi-tabla th, .mi-tabla td {
+  border: 2px solid #25467F; /* Bordes en color azul */
+  padding: 10px;
+  text-align: left;
+}
+
+.mi-tabla th {
+  background-color: #25467F; /* Encabezado azul */
+  color: white;
+}
+
+.mi-tabla td {
+  background-color: #D9D9D9; /* Contenido gris */
+  color: #666666;
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
