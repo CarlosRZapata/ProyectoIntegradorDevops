@@ -54,5 +54,5 @@ while True:
     except Exception as e:
         print("Error al insertar en Supabase:", e)
 
-    print("Esperando 1 minuto para la próxima consulta...")
-    time.sleep(10)
+    print("Esperando 30 minutos para la próxima consulta...")
+    time.sleep(1800)
