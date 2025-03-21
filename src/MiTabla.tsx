@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import supabase from "./utils/supabase";
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+//import logger from "./utils/logger";
 
 type AirQuality = {
   id: number;
@@ -44,7 +45,7 @@ const MiTabla = () => {
     fetchData();
   }, []);
 
-  //Calculo de metricas
+  //Metricas
   useEffect(() => {
     if (data.length > 0) {
       const avgTemp = data.reduce((acc, item) => acc + item.temperature, 0) / data.length;
@@ -61,15 +62,25 @@ const MiTabla = () => {
       <h1>Villahermosa Quality</h1>
 
       {metrics && (
-        <div style={{ marginBottom: "20px", padding: "10px", backgroundColor: "#f4f4f4", borderRadius: "8px" }}>
-          <h2>Métricas</h2>
-          <ul>
-            <li><strong>Temperatura Promedio:</strong> {metrics.avgTemp.toFixed(2)}°C</li>
-            <li><strong>AQI Máximo:</strong> {metrics.maxAQI}</li>
-            <li><strong>AQI Mínimo:</strong> {metrics.minAQI}</li>
-            <li><strong>Humedad Promedio:</strong> {metrics.avgHumidity.toFixed(2)}%</li>
-          </ul>
+        <div className="metrics-container">
+        <h2>Métricas</h2>
+        <div className="metric-item">
+          <strong>Temperatura Promedio:</strong>
+          <p>{metrics.avgTemp.toFixed(2)}°C</p>
         </div>
+        <div className="metric-item">
+          <strong>AQI Máximo:</strong>
+          <p>{metrics.maxAQI}</p>
+        </div>
+        <div className="metric-item">
+          <strong>AQI Mínimo:</strong>
+          <p>{metrics.minAQI}</p>
+        </div>
+        <div className="metric-item">
+          <strong>Humedad Promedio:</strong>
+          <p>{metrics.avgHumidity.toFixed(2)}%</p>
+        </div>
+      </div>
       )}
       {data.length > 0 && <AQIGraph data={data} />}
 

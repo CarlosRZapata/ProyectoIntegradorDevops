@@ -57,8 +57,8 @@ button:focus-visible {
 .mi-tabla {
   width: 100%;
   border-collapse: collapse;
-  border-spacing: 0; /* Elimina espacios entre celdas */
-  border-radius: 10px 10px 0 0; /* Esquinas superiores redondeadas */
+  border-spacing: 0; 
+  border-radius: 10px 10px 0 0; 
   overflow: hidden; /* Asegura que el borde redondeado se mantenga */
 }
 
@@ -78,6 +78,37 @@ button:focus-visible {
   color: #666666;
 }
 
+/* Estilo para el cuadro de las métricas */
+.metrics-container {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid #25467F; /* Bordes en color azul para mantener el tema */
+  color: #ffffff; /* Texto blanco */
+}
+
+.metrics-container h2 {
+  margin-bottom: 12px;
+  font-size: 1.5em;
+  color: #ffffff;
+}
+
+.metrics-container .metric-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+}
+
+.metrics-container .metric-item strong {
+  color: #646cff; /* Color del texto de la etiqueta */
+}
+
+.metrics-container .metric-item p {
+  color: #e0e0e0; /* Color del valor */
+}
 
 @media (prefers-color-scheme: light) {
   :root {
